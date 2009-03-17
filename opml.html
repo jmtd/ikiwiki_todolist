@@ -20,12 +20,6 @@ function wrap(wrapper,sweetie) {
     return x;
 }
 
-function clear_children(something) {
-    while (something.childNodes.length >= 1) {
-        something.removeChild(something.firstChild);
-    } 
-}
-
 // cursor functions //////////////////////////////////////////////////////////
 // The cursor is a DOM snippet which represents a selected item
 
@@ -58,16 +52,22 @@ function create_cursor() {
             // parentul/li/cursor - parentul/li/item ul/li2/cursor
             var li = cursor.parentNode;
             deselect_item(cursor);
-            var sib = li.nextSibling;
             var newitem = create_item('new item');
             li.appendChild(wrap("ul", wrap("li", newitem)));
             select_item(newitem);
             cursor.focus(); // XXX: move elsewhere?
 
         } else if(evt.keyCode == 37) { // left
-            // grandparentul/li/parentul/cursor? -> grandparentul/cursor
-            // parentul/cursor? -> parentul/cursor
-            // check parents against id=mainlist for root
+            // grandparentul/li/stuff parentul/li/cursor -> grandparentul/li/cursor
+            var newfocus = cursor;
+            for(var i = 0; i < 3; ++i) {
+                newfocus = cursor.parentNode;
+                if(null == newfocus) {
+                    alert("not deep enough");
+                    return;
+                }
+            }
+            select_item(newfocus);
         }
 
     }, false);
@@ -80,9 +80,7 @@ function get_cursor() {
     var cursor = document.getElementById("cursor");
     if(null != cursor) {
         var par = cursor.parentNode;
-        var newitem = create_item(cursor.value);
-        clear_children(par);
-        par.appendChild(newitem);
+        par.replaceChild(create_item(cursor.value), cursor);
     } else {
         cursor = create_cursor();
     }
@@ -158,8 +156,7 @@ function deselect_item(item) {
     }
     var par = item.parentNode;
     var newitem = create_item(item.value);
-    clear_children(par);
-    par.appendChild(newitem);
+    par.replaceChild(newitem, item);
 }
 
 function select_item(item) {
@@ -174,8 +171,7 @@ function select_item(item) {
     var par = item.parentNode;
     // XXX: the following assumes item.firstChild is the required span
     cursor.value = get_item_text(item);
-    clear_children(par);
-    par.appendChild(cursor);
+    par.replaceChild(cursor, item);
 }
 
 // event hooks ///////////////////////////////////////////////////////////////
