@@ -1,4 +1,9 @@
 <html><head><title>live list editor</title>
+<style type="text/css">
+.item_text {
+    background: #ccc;
+}
+</style>
 <script lang="text/javascript">
 
 if (!document.addEventListener && document.attachEvent){
@@ -6,81 +11,147 @@ if (!document.addEventListener && document.attachEvent){
     //el.attachEvent('onclick', modifyText);
 }
 
-function list_startup() {
-    var txt = document.getElementById("newtext");
-    txt.addEventListener("keypress", function(evt) {
+function wrap(wrapper,sweetie) {
+    var x = document.createElement(wrapper);
+    x.appendChild(sweetie);
+    return x;
+}
 
-        if(evt.keyCode == 40) { //down
-            var frm = document.getElementById("cursor");
-            var sib = frm.nextSibling;
-            if(null != sib) {
-                sib.parentNode.removeChild(frm);
-                sib.parentNode.insertBefore(frm, sib.nextSibling);
-                document.getElementById("newtext").focus();
-            }
+function create_cursor() {
+    var form = document.createElement("form");
+    form.innerHTML = '<form id="cursor" onsubmit="return additem();" action=""> <input type="text" id="newtext" style="width: 90%";/> <input type="submit" value="Add" /> </form>';
+    form.onsubmit = "return additem()";
+    form.action = "";
+    form.setAttribute("id", "cursor");
+    return form;
+}
 
-        } else if(evt.keyCode == 38) { // up
-            var frm = document.getElementById("cursor");
-            var sib = frm.previousSibling;
-            if(null != sib) {
-                sib.parentNode.removeChild(frm);
-                sib.parentNode.insertBefore(frm, sib);
-                document.getElementById("newtext").focus();
-            }
-        } else if(evt.keyCode == 39) { // right
-            // parentul/cursor -> parentul/li/ul/cursor
-            var frm = document.getElementById("cursor");
-            var sib = frm.nextSibling;
-            frm.parentNode.removeChild(frm);
-            var ul = document.createElement("ul");
-            var li = document.createElement("li");
-            ul.appendChild(frm);
-            li.appendChild(ul);
-            sib.parentNode.insertBefore(li, sib);
-            document.getElementById("newtext").focus();
-        } else if(evt.keyCode == 37) { // left
-            // grandparentul/li/parentul/cursor? -> grandparentul/cursor
-            // parentul/cursor? -> parentul/cursor
-            // check parents against id=mainlist for root
-        }
+// set the given item as active (move the cursor to it)
+function set_active_item(item) {
+    var cursor = get_cursor();
+    // XXX: the following assumes item.firstChild is the required span
+    cursor.newtext.value = get_item_text(item.firstChild);
+    var li = item.parentNode;
+    clear_children(li);
+    li.appendChild(cursor);
+}
 
+// creates an item
+// <span><span item_text>new item</span><span> <a>(delete)</a></span></span>) 
+function create_item(item_text) {
+    var span_item_text = wrap("span", document.createTextNode(item_text));
+    span_item_text.setAttribute("class", "item_text");
+
+    var span_item = wrap("span",span_item_text);
+
+    span_item_text.addEventListener("click", function () {
+       set_active_item(span_item);
     }, false);
+
+    var a = wrap("a", document.createTextNode("delete"));
+    a.href = '#';
+    a.addEventListener("click", function () {
+        var li = span_item.parentNode;
+        var ul = li.parentNode;
+        ul.removeChild(li);
+    }, false);
+    var span_item_controls = wrap("span", document.createTextNode(' ('));
+    span_item_controls.appendChild(a);
+    span_item_controls.appendChild(document.createTextNode(')'));
+    span_item.appendChild(span_item_controls);
+    span_item.style.background = 'none';
+    span_item_controls.style.display = 'none';
+    span_item.addEventListener("mouseover", function(evt) { // ie uses onmouseover
+        span_item.style.background = '#ffc';
+        span_item_controls.style.display = 'inline';
+    }, false);
+    span_item.addEventListener("mouseout", function(evt) { // ie uses onmouseover
+        span_item.style.background = 'none';
+        span_item_controls.style.display = 'none';
+    }, false);
+    return span_item;
+}
+
+// fetch the textual data out of an item
+function get_item_text(item) {
+       // XXX: I'm sure item.data should work here but it doesn't
+       return item.innerHTML;
+}
+
+// fetch the textual data out of the cursor
+function get_cursor_text(cursor) {
+    return cursor.newtext.value;
+}
+
+// detach the cursor object from the DOM if attached and return it here
+function get_cursor() {
+    var cursor = document.getElementById("cursor");
+    if(null != cursor) {
+        var newitem = create_item(get_cursor_text(cursor));
+        cursor.parentNode.insertBefore(wrap("li",newitem), cursor);
+        cursor.parentNode.removeChild(cursor);
+    } else {
+        cursor = create_cursor();
+    }
+    return cursor;
+}
+
+function clear_children(something) {
+    while (something.childNodes.length >= 1) {
+        something.removeChild(something.firstChild);
+    } 
 }
 
 function additem() {
-
-    var txt = document.getElementById("newtext");
-    var li  = document.createElement("li");
-    li.appendChild(document.createTextNode(txt.value));
-    txt.value = '';
-
-    var span = document.createElement("span");
-    var a = document.createElement("a");
-    a.href = '#';
-    a.appendChild(document.createTextNode("delete"));
-    a.addEventListener("click", function () {
-        li.parentNode.removeChild(li);
-    }, false);
-    span.appendChild(document.createTextNode(' ('));
-    span.appendChild(a);
-    span.appendChild(document.createTextNode(')'));
-    li.appendChild(span);
-    li.style.background = 'none';
-    span.style.display = 'none';
-    li.addEventListener("mouseover", function(evt) { // ie uses onmouseover
-        li.style.background = '#ffc';
-        span.style.display = 'inline';
-    }, false);
-    li.addEventListener("mouseout", function(evt) { // ie uses onmouseover
-        li.style.background = 'none';
-        span.style.display = 'none';
-    }, false);
-
-    var frm = document.getElementById("cursor");
-    frm.parentNode.insertBefore(li, frm);
-
+    var mainlist = document.getElementById("mainlist");
+    var item = create_item('new item'); 
+    mainlist.insertBefore(wrap("li", item), null);
+    set_active_item(item);
     return false;
 }
+
+function list_startup() {
+    var txt = document.getElementById("newtext");
+    if(null != txt) {
+        txt.addEventListener("keypress", function(evt) {
+
+            if(evt.keyCode == 40) { //down
+                var frm = document.getElementById("cursor");
+                var sib = frm.nextSibling;
+                if(null != sib) {
+                    sib.parentNode.removeChild(frm);
+                    sib.parentNode.insertBefore(frm, sib.nextSibling);
+                    document.getElementById("newtext").focus();
+                }
+
+            } else if(evt.keyCode == 38) { // up
+                var frm = document.getElementById("cursor");
+                var sib = frm.previousSibling;
+                if(null != sib) {
+                    sib.parentNode.removeChild(frm);
+                    sib.parentNode.insertBefore(frm, sib);
+                    document.getElementById("newtext").focus();
+                }
+            } else if(evt.keyCode == 39) { // right
+                // parentul/cursor -> parentul/li/ul/cursor
+                var frm = document.getElementById("cursor");
+                var sib = frm.nextSibling;
+                frm.parentNode.removeChild(frm);
+                sib.parentNode.insertBefore(wrap("li",wrap("ul",frm)), sib);
+                document.getElementById("newtext").focus();
+            } else if(evt.keyCode == 37) { // left
+                // grandparentul/li/parentul/cursor? -> grandparentul/cursor
+                // parentul/cursor? -> parentul/cursor
+                // check parents against id=mainlist for root
+            }
+
+        }, false);
+    }
+
+    document.getElementById("mainlist").
+        insertBefore(wrap("li",create_item('first item')), null);
+}
+
 
 function debugme() {
     alert(document.getElementById('thebody').innerHTML);
@@ -91,13 +162,8 @@ function debugme() {
 </head>
 <body id="thebody" onload="list_startup()";>
 <ul id="mainlist">
-    <li id="cursor">
-      <form onsubmit="return additem();" action="">
-        <input type="text" id="newtext" />
-        <input type="submit" value="Add" />
-      </form>
-    </li>
 </ul>
-<input type="submit" onclick="debugme();" name="debugme" />
+<input type="submit" onclick="debugme();" value="debugme" />
+<input type="submit" onclick="additem();" value="new item" />
 
 </body></html>
