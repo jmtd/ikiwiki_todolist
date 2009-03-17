@@ -1,0 +1,103 @@
+<html><head><title>live list editor</title>
+<script lang="text/javascript">
+
+if (!document.addEventListener && document.attachEvent){
+    alert("IE sucks");
+    //el.attachEvent('onclick', modifyText);
+}
+
+function list_startup() {
+    var txt = document.getElementById("newtext");
+    txt.addEventListener("keypress", function(evt) {
+
+        if(evt.keyCode == 40) { //down
+            var frm = document.getElementById("cursor");
+            var sib = frm.nextSibling;
+            if(null != sib) {
+                sib.parentNode.removeChild(frm);
+                sib.parentNode.insertBefore(frm, sib.nextSibling);
+                document.getElementById("newtext").focus();
+            }
+
+        } else if(evt.keyCode == 38) { // up
+            var frm = document.getElementById("cursor");
+            var sib = frm.previousSibling;
+            if(null != sib) {
+                sib.parentNode.removeChild(frm);
+                sib.parentNode.insertBefore(frm, sib);
+                document.getElementById("newtext").focus();
+            }
+        } else if(evt.keyCode == 39) { // right
+            // parentul/cursor -> parentul/li/ul/cursor
+            var frm = document.getElementById("cursor");
+            var sib = frm.nextSibling;
+            frm.parentNode.removeChild(frm);
+            var ul = document.createElement("ul");
+            var li = document.createElement("li");
+            ul.appendChild(frm);
+            li.appendChild(ul);
+            sib.parentNode.insertBefore(li, sib);
+            document.getElementById("newtext").focus();
+        } else if(evt.keyCode == 37) { // left
+            // grandparentul/li/parentul/cursor? -> grandparentul/cursor
+            // parentul/cursor? -> parentul/cursor
+            // check parents against id=mainlist for root
+        }
+
+    }, false);
+}
+
+function additem() {
+
+    var txt = document.getElementById("newtext");
+    var li  = document.createElement("li");
+    li.appendChild(document.createTextNode(txt.value));
+    txt.value = '';
+
+    var span = document.createElement("span");
+    var a = document.createElement("a");
+    a.href = '#';
+    a.appendChild(document.createTextNode("delete"));
+    a.addEventListener("click", function () {
+        li.parentNode.removeChild(li);
+    }, false);
+    span.appendChild(document.createTextNode(' ('));
+    span.appendChild(a);
+    span.appendChild(document.createTextNode(')'));
+    li.appendChild(span);
+    li.style.background = 'none';
+    span.style.display = 'none';
+    li.addEventListener("mouseover", function(evt) { // ie uses onmouseover
+        li.style.background = '#ffc';
+        span.style.display = 'inline';
+    }, false);
+    li.addEventListener("mouseout", function(evt) { // ie uses onmouseover
+        li.style.background = 'none';
+        span.style.display = 'none';
+    }, false);
+
+    var frm = document.getElementById("cursor");
+    frm.parentNode.insertBefore(li, frm);
+
+    return false;
+}
+
+function debugme() {
+    alert(document.getElementById('thebody').innerHTML);
+}
+
+</script>
+
+</head>
+<body id="thebody" onload="list_startup()";>
+<ul id="mainlist">
+    <li id="cursor">
+      <form onsubmit="return additem();" action="">
+        <input type="text" id="newtext" />
+        <input type="submit" value="Add" />
+      </form>
+    </li>
+</ul>
+<input type="submit" onclick="debugme();" name="debugme" />
+
+</body></html>
