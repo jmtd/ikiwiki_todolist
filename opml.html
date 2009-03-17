@@ -56,14 +56,15 @@ function create_cursor() {
         } else if(evt.keyCode == 37) { // left
             // grandparentul/li/stuff parentul/li/cursor -> grandparentul/li/cursor
             var newfocus = cursor;
+            var root = document.getElementById("mainlist");
             for(var i = 0; i < 3; ++i) {
-                newfocus = cursor.parentNode;
-                if(null == newfocus) {
+                newfocus = newfocus.parentNode;
+                if(null == newfocus || root == newfocus) {
                     alert("not deep enough");
                     return;
                 }
             }
-            select_item(newfocus);
+            select_item(newfocus.firstChild);
         }
 
     }, false);
@@ -160,7 +161,6 @@ function select_item(item) {
         return;
     }
     var cursor = get_cursor();
-    // if cursor has no parent, there is no active item
     if(cursor_is_active()) {
         deselect_item(cursor);
     }
