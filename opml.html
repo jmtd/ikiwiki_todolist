@@ -35,18 +35,14 @@ function create_cursor() {
             var li = cursor.parentNode;
             var sib = li.nextSibling;
             if(null != sib) {
-                sib.parentNode.removeChild(li);
-                sib.parentNode.insertBefore(li, sib.nextSibling);
-                cursor.focus();
+                select_item(sib.firstChild);
             }
 
         } else if(evt.keyCode == 38) { // up
             var li = cursor.parentNode;
             var sib = li.previousSibling;
             if(null != sib) {
-                sib.parentNode.removeChild(li);
-                sib.parentNode.insertBefore(li, sib);
-                cursor.focus();
+                select_item(sib.firstChild);
             }
         } else if(evt.keyCode == 39) { // right
             // parentul/li/cursor - parentul/li/item ul/li2/cursor
@@ -172,6 +168,7 @@ function select_item(item) {
     // XXX: the following assumes item.firstChild is the required span
     cursor.value = get_item_text(item);
     par.replaceChild(cursor, item);
+    cursor.focus();
 }
 
 // event hooks ///////////////////////////////////////////////////////////////
