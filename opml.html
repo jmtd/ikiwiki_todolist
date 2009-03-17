@@ -6,10 +6,8 @@
 </style>
 <script lang="text/javascript">
 
-if (!document.addEventListener && document.attachEvent){
-    alert("IE sucks");
-    //el.attachEvent('onclick', modifyText);
-}
+// syntactic sugar ///////////////////////////////////////////////////////////
+// and helper functions
 
 function wrap(wrapper,sweetie) {
     var x = document.createElement(wrapper);
@@ -17,27 +15,93 @@ function wrap(wrapper,sweetie) {
     return x;
 }
 
-function create_cursor() {
-    var form = document.createElement("form");
-    form.innerHTML = '<form id="cursor" onsubmit="return additem();" action=""> <input type="text" id="newtext" style="width: 90%";/> <input type="submit" value="Add" /> </form>';
-    form.onsubmit = "return additem()";
-    form.action = "";
-    form.setAttribute("id", "cursor");
-    return form;
+function clear_children(something) {
+    while (something.childNodes.length >= 1) {
+        something.removeChild(something.firstChild);
+    } 
 }
+
+// cursor functions //////////////////////////////////////////////////////////
+// The cursor is a DOM snippet which represents a selected item
+
+function create_cursor() {
+    var cursor = document.createElement("input");
+    cursor.setAttribute("type", "text");
+    cursor.setAttribute("id", "cursor");
+    cursor.setAttribute("style", "width: 90%");
+
+    cursor.addEventListener("keypress", function(evt) {
+
+        if(evt.keyCode == 40) { //down
+            var li = cursor.parentNode;
+            var sib = li.nextSibling;
+            if(null != sib) {
+                sib.parentNode.removeChild(li);
+                sib.parentNode.insertBefore(li, sib.nextSibling);
+                cursor.focus();
+            }
+
+        } else if(evt.keyCode == 38) { // up
+            var li = cursor.parentNode;
+            var sib = li.previousSibling;
+            if(null != sib) {
+                sib.parentNode.removeChild(li);
+                sib.parentNode.insertBefore(li, sib);
+                cursor.focus();
+            }
+        } else if(evt.keyCode == 39) { // right
+            // parentul/li/cursor - parentul/li/ul/li2/cursor
+            var li = cursor.parentNode;
+            var sib = li.nextSibling;
+            li.removeChild(cursor);
+            li.appendChild(wrap("ul", wrap("li", cursor)));
+            cursor.focus();
+        } else if(evt.keyCode == 37) { // left
+            // grandparentul/li/parentul/cursor? -> grandparentul/cursor
+            // parentul/cursor? -> parentul/cursor
+            // check parents against id=mainlist for root
+        }
+
+    }, false);
+
+    return cursor;
+}
+
+// detach the cursor object from the DOM if attached and return it here
+function get_cursor() {
+    var cursor = document.getElementById("cursor");
+    if(null != cursor) {
+        var par = cursor.parentNode;
+        var newitem = create_item(cursor.value);
+        clear_children(par);
+        par.appendChild(newitem);
+    } else {
+        cursor = create_cursor();
+    }
+    return cursor;
+}
+
+// item functions ////////////////////////////////////////////////////////////
+// an item is text, wrapped up in a DOM segment.
+// the DOM segment is a span with nested spans within
 
 // set the given item as active (move the cursor to it)
 function set_active_item(item) {
     var cursor = get_cursor();
+    var par = item.parentNode;
     // XXX: the following assumes item.firstChild is the required span
-    cursor.newtext.value = get_item_text(item.firstChild);
-    var li = item.parentNode;
-    clear_children(li);
-    li.appendChild(cursor);
+    cursor.value = get_item_text(item);
+    clear_children(par);
+    par.appendChild(cursor);
 }
 
-// creates an item
-// <span><span item_text>new item</span><span> <a>(delete)</a></span></span>) 
+// create a new item
+// * span
+//   * span item_text
+//     * text: new item
+//   * span item_controls
+//     * a
+//       * text: (delete)
 function create_item(item_text) {
     var span_item_text = wrap("span", document.createTextNode(item_text));
     span_item_text.setAttribute("class", "item_text");
@@ -51,22 +115,19 @@ function create_item(item_text) {
     var a = wrap("a", document.createTextNode("delete"));
     a.href = '#';
     a.addEventListener("click", function () {
-        var li = span_item.parentNode;
-        var ul = li.parentNode;
-        ul.removeChild(li);
+        var pa      = span_item.parentNode;
+        var grandpa = pa.parentNode;
+        grandpa.removeChild(pa);
     }, false);
     var span_item_controls = wrap("span", document.createTextNode(' ('));
     span_item_controls.appendChild(a);
     span_item_controls.appendChild(document.createTextNode(')'));
     span_item.appendChild(span_item_controls);
-    span_item.style.background = 'none';
     span_item_controls.style.display = 'none';
     span_item.addEventListener("mouseover", function(evt) { // ie uses onmouseover
-        span_item.style.background = '#ffc';
         span_item_controls.style.display = 'inline';
     }, false);
     span_item.addEventListener("mouseout", function(evt) { // ie uses onmouseover
-        span_item.style.background = 'none';
         span_item_controls.style.display = 'none';
     }, false);
     return span_item;
@@ -75,33 +136,12 @@ function create_item(item_text) {
 // fetch the textual data out of an item
 function get_item_text(item) {
        // XXX: I'm sure item.data should work here but it doesn't
-       return item.innerHTML;
+       return item.firstChild.innerHTML;
 }
 
-// fetch the textual data out of the cursor
-function get_cursor_text(cursor) {
-    return cursor.newtext.value;
-}
+// event hooks ///////////////////////////////////////////////////////////////
 
-// detach the cursor object from the DOM if attached and return it here
-function get_cursor() {
-    var cursor = document.getElementById("cursor");
-    if(null != cursor) {
-        var newitem = create_item(get_cursor_text(cursor));
-        cursor.parentNode.insertBefore(wrap("li",newitem), cursor);
-        cursor.parentNode.removeChild(cursor);
-    } else {
-        cursor = create_cursor();
-    }
-    return cursor;
-}
-
-function clear_children(something) {
-    while (something.childNodes.length >= 1) {
-        something.removeChild(something.firstChild);
-    } 
-}
-
+// add a new item to the list
 function additem() {
     var mainlist = document.getElementById("mainlist");
     var item = create_item('new item'); 
@@ -110,48 +150,10 @@ function additem() {
     return false;
 }
 
+// initialisation stuff
 function list_startup() {
-    var txt = document.getElementById("newtext");
-    if(null != txt) {
-        txt.addEventListener("keypress", function(evt) {
-
-            if(evt.keyCode == 40) { //down
-                var frm = document.getElementById("cursor");
-                var sib = frm.nextSibling;
-                if(null != sib) {
-                    sib.parentNode.removeChild(frm);
-                    sib.parentNode.insertBefore(frm, sib.nextSibling);
-                    document.getElementById("newtext").focus();
-                }
-
-            } else if(evt.keyCode == 38) { // up
-                var frm = document.getElementById("cursor");
-                var sib = frm.previousSibling;
-                if(null != sib) {
-                    sib.parentNode.removeChild(frm);
-                    sib.parentNode.insertBefore(frm, sib);
-                    document.getElementById("newtext").focus();
-                }
-            } else if(evt.keyCode == 39) { // right
-                // parentul/cursor -> parentul/li/ul/cursor
-                var frm = document.getElementById("cursor");
-                var sib = frm.nextSibling;
-                frm.parentNode.removeChild(frm);
-                sib.parentNode.insertBefore(wrap("li",wrap("ul",frm)), sib);
-                document.getElementById("newtext").focus();
-            } else if(evt.keyCode == 37) { // left
-                // grandparentul/li/parentul/cursor? -> grandparentul/cursor
-                // parentul/cursor? -> parentul/cursor
-                // check parents against id=mainlist for root
-            }
-
-        }, false);
-    }
-
-    document.getElementById("mainlist").
-        insertBefore(wrap("li",create_item('first item')), null);
+    document.getElementById("mainlist").appendChild(wrap("li",create_item('first item')));
 }
-
 
 function debugme() {
     alert(document.getElementById('thebody').innerHTML);
