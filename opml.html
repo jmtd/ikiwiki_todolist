@@ -51,7 +51,6 @@ function create_cursor() {
             var newitem = create_item('new item');
             li.appendChild(wrap("ul", wrap("li", newitem)));
             select_item(newitem);
-            cursor.focus(); // XXX: move elsewhere?
 
         } else if(evt.keyCode == 37) { // left
             // grandparentul/li/stuff parentul/li/cursor -> grandparentul/li/cursor
