@@ -83,6 +83,7 @@ if(evt.keyCode == 40) { //down
 }
 
 // detach the cursor object from the DOM if attached and return it here
+// XXX: a few places using this not expecting it to detach
 function get_cursor() {
     var cursor = document.getElementById("cursor");
     if(null != cursor) {
@@ -96,8 +97,12 @@ function get_cursor() {
 
 // return whether the cursor is currently deployed
 function cursor_is_active() {
-    var cursor = get_cursor();
-    return null != cursor.parentNode;
+    var cursor = document.getElementById("cursor");
+    if(null == cursor) {
+        cursor = get_cursor();
+    }
+    var answer = null != cursor.parentNode;
+    return answer;
 }
 
 // item functions ////////////////////////////////////////////////////////////
@@ -185,9 +190,17 @@ function select_item(item) {
 
 // add a new item to the list
 function additem() {
-    var mainlist = document.getElementById("mainlist");
+    var list;
+    if(cursor_is_active()) {
+        list = cursor.parentNode;
+        if(null == list) { alert("wtf1"); }
+        list = list.parentNode;
+        if(null == list) { alert("wtf2"); }
+    } else {
+        list = document.getElementById("mainlist");
+    }
     var item = create_item('new item'); 
-    mainlist.insertBefore(wrap("li", item), null);
+    list.appendChild(wrap("li", item));
     select_item(item);
     return false;
 }
