@@ -30,8 +30,7 @@ function create_cursor() {
     cursor.setAttribute("style", "width: 90%");
 
     cursor.addEventListener("keypress", function(evt) {
-
-        if(evt.keyCode == 40) { //down
+if(evt.keyCode == 40) { //down
             var li = cursor.parentNode;
             var sib = li.nextSibling;
             if(null != sib) {
@@ -49,7 +48,16 @@ function create_cursor() {
             var li = cursor.parentNode;
             deselect_item(cursor);
             var newitem = create_item('new item');
-            li.appendChild(wrap("ul", wrap("li", newitem)));
+
+            var ul;
+            if(li.firstChild.nextSibling && "UL" == li.firstChild.nextSibling.tagName ) {
+                ul = li.firstChild.nextSibling;
+            } else {
+                ul = document.createElement("ul");
+            }
+
+            ul.appendChild(wrap("li", newitem));
+            li.appendChild(ul);
             select_item(newitem);
 
         } else if(evt.keyCode == 37) { // left
@@ -199,5 +207,4 @@ function debugme() {
 </ul>
 <input type="submit" onclick="debugme();" value="debugme" />
 <input type="submit" onclick="additem();" value="new item" />
-
 </body></html>
