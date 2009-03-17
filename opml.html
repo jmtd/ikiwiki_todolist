@@ -3,6 +3,11 @@
 .item_text {
     background: #ccc;
 }
+.item {
+    background: #cfc;
+    padding-left: 1em;
+    padding-right: 1em;
+}
 </style>
 <script lang="text/javascript">
 
@@ -16,7 +21,7 @@ function wrap(wrapper,sweetie) {
 }
 
 function clear_children(something) {
-    while (something.childNodes.length >= 1) {
+    while (null != something && something.childNodes.length >= 1) {
         something.removeChild(something.firstChild);
     } 
 }
@@ -33,6 +38,7 @@ function create_cursor() {
     cursor.addEventListener("keypress", function(evt) {
 
         if(evt.keyCode == 40) { //down
+            if(item_is_selected(cursor)) { alert("AYE"); }
             var li = cursor.parentNode;
             var sib = li.nextSibling;
             if(null != sib) {
@@ -88,6 +94,7 @@ function get_cursor() {
 // set the given item as active (move the cursor to it)
 function set_active_item(item) {
     var cursor = get_cursor();
+    deselect_item(cursor);
     var par = item.parentNode;
     // XXX: the following assumes item.firstChild is the required span
     cursor.value = get_item_text(item);
@@ -96,47 +103,74 @@ function set_active_item(item) {
 }
 
 // create a new item
-// * span
+// * div
 //   * span item_text
 //     * text: new item
 //   * span item_controls
 //     * a
 //       * text: (delete)
+//   * div item_subtree
+//       (initially empty)
 function create_item(item_text) {
     var span_item_text = wrap("span", document.createTextNode(item_text));
     span_item_text.setAttribute("class", "item_text");
 
-    var span_item = wrap("span",span_item_text);
+    var div_item = wrap("span",span_item_text);
+    div_item.setAttribute("class","item");
 
     span_item_text.addEventListener("click", function () {
-       set_active_item(span_item);
+       set_active_item(div_item);
     }, false);
 
     var a = wrap("a", document.createTextNode("delete"));
     a.href = '#';
     a.addEventListener("click", function () {
-        var pa      = span_item.parentNode;
+        var pa      = div_item.parentNode;
         var grandpa = pa.parentNode;
         grandpa.removeChild(pa);
     }, false);
     var span_item_controls = wrap("span", document.createTextNode(' ('));
     span_item_controls.appendChild(a);
     span_item_controls.appendChild(document.createTextNode(')'));
-    span_item.appendChild(span_item_controls);
+    div_item.appendChild(span_item_controls);
     span_item_controls.style.display = 'none';
-    span_item.addEventListener("mouseover", function(evt) { // ie uses onmouseover
+    div_item.addEventListener("mouseover", function(evt) { // ie uses onmouseover
         span_item_controls.style.display = 'inline';
     }, false);
-    span_item.addEventListener("mouseout", function(evt) { // ie uses onmouseover
+    div_item.addEventListener("mouseout", function(evt) { // ie uses onmouseover
         span_item_controls.style.display = 'none';
     }, false);
-    return span_item;
+    return div_item;
 }
 
 // fetch the textual data out of an item
 function get_item_text(item) {
        // XXX: I'm sure item.data should work here but it doesn't
        return item.firstChild.innerHTML;
+}
+
+// selecting and deselecting items ///////////////////////////////////////////
+
+function item_is_selected(item) {
+    return "cursor" == item.getAttribute("id");
+}
+
+function deselect_item(item) {
+    if(!item_is_selected(item)) {
+        return;
+    }
+    var par = item.parentNode;
+    var newitem = create_item(item.value);
+    clear_children(par);
+    par.appendChild(newitem);
+}
+
+function select_item(item) {
+    if(item_is_selected(item)) {
+        return;
+    }
+    var cursor = get_cursor();
+    var par = item.parentNode;
 }
 
 // event hooks ///////////////////////////////////////////////////////////////
