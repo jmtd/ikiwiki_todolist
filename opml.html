@@ -49,16 +49,20 @@ if(evt.keyCode == 40) { //down
             deselect_item(cursor);
             var newitem = create_item('new item');
 
-            var ul;
-            if(li.firstChild.nextSibling && "UL" == li.firstChild.nextSibling.tagName ) {
-                ul = li.firstChild.nextSibling;
+            /* if there's already a sub-tree, select the first node */
+            if(li.firstChild.nextSibling && 
+                ("UL" == li.firstChild.nextSibling.tagName || 
+                "ul" == li.firstChild.nextSibling.tagName)) {
+                    var ul = li.firstChild.nextSibling;
+                    var selectme = ul.firstChild.firstChild;
+                    select_item(selectme);
             } else {
+                var ul;
                 ul = document.createElement("ul");
+                ul.appendChild(wrap("li", newitem));
+                li.appendChild(ul);
+                select_item(newitem);
             }
-
-            ul.appendChild(wrap("li", newitem));
-            li.appendChild(ul);
-            select_item(newitem);
 
         } else if(evt.keyCode == 37) { // left
             // grandparentul/li/stuff parentul/li/cursor -> grandparentul/li/cursor
