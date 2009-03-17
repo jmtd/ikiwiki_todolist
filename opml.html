@@ -59,8 +59,7 @@ function create_cursor() {
             for(var i = 0; i < 3; ++i) {
                 newfocus = newfocus.parentNode;
                 if(null == newfocus || root == newfocus) {
-                    alert("not deep enough");
-                    return;
+                    return; // XXX: slightly uncomfortable with this
                 }
             }
             select_item(newfocus.firstChild);
