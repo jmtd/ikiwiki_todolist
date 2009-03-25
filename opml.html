@@ -7,6 +7,10 @@
     background: #cfc;
     padding-left: 1em;
     padding-right: 1em;
+    border: 1px solid black;
+}
+.selected {
+    border: 1px solid red;
 }
 </style>
 <script lang="text/javascript">
@@ -163,7 +167,9 @@ function get_item_text(item) {
 // selecting and deselecting items ///////////////////////////////////////////
 
 function item_is_selected(item) {
-    return "cursor" == item.getAttribute("id");
+    var c = item.getAttribute("class");
+    alert(c);
+    return "select_item" == c;
 }
 
 function deselect_item(item) {
@@ -176,18 +182,15 @@ function deselect_item(item) {
 }
 
 function select_item(item) {
-    if(item_is_selected(item)) {
-        return;
+    var items = document.getElementsByTagName("div");
+    for(var i = 0; i < items.length; ++i) {
+        alert(i);
+        if(item_is_selected(items[i])) {
+            var c = items[i].setAttribute("item");
+        }
+            
     }
-    var cursor = get_cursor();
-    if(cursor_is_active()) {
-        deselect_item(cursor);
-    }
-    var par = item.parentNode;
-    // XXX: the following assumes item.firstChild is the required span
-    cursor.value = get_item_text(item);
-    par.replaceChild(cursor, item);
-    cursor.focus();
+    item.setAttribute("class","item selected");
 }
 
 // event hooks ///////////////////////////////////////////////////////////////
