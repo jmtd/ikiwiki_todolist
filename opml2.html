@@ -19,10 +19,21 @@ function debug(text) {
     document.getElementById("debugarea").value = text;
 }
 
+function remove_item(item) {
+    var pa = item.parentNode;
+    pa.removeChild(item);
+}
+
 function newitem(text) {
     var li = document.createElement("li");
-    var txt = document.createTextNode(text);
-    li.appendChild(txt);
+    var a = document.createElement("a");
+    a.href = '#';
+    a.appendChild(document.createTextNode("x"));
+    a.addEventListener("click", function () {
+        remove_item(li);
+    }, false);
+    li.appendChild(document.createTextNode(text + ' '));
+    li.appendChild(a);
     return li;
 }
 
