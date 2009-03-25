@@ -41,6 +41,7 @@ function edit_item_text(item) {
     var text = prompt("item text", "item text goes here");
     var ni = newitem(text);
     item.parentNode.replaceChild(ni, item);
+    enable_commit_button();
 }
 
 function additem(text) {
@@ -130,6 +131,7 @@ function list_startup() {
 
 function commit_changes() {
 
+    deselect_all_items(); // so we don't save an active item
     // get the ikiwiki_session_wiki cookie and stick it into our encoded URL
     // as sid=
     // TODO: need to customize page= param
