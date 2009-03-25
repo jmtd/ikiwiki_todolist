@@ -4,8 +4,9 @@
 // manipulating items
 
 function remove_item(item) {
+    var list = document.getElementById("mainlist");
     var pa = item.parentNode;
-    pa.removeChild(item);
+    list.removeChild(item);
     debug("remove_item");
     enable_commit_button();
 }
@@ -25,6 +26,7 @@ function newitem(text) {
     var a = document.createElement("a");
     a.href = '#';
     a.appendChild(document.createTextNode("x"));
+    a.setAttribute("class", "remove");
     a.addEventListener("click", function () {
         remove_item(li);
     }, false);
@@ -79,7 +81,7 @@ function additem_button() {
     additem("new item");
 }
 
-function disable_commit_button() { // not working
+function disable_commit_button() { // not working?
     var input = document.getElementById("commitbutton");
     input.setAttribute("style", "display: none;");
     input.style.display = "none";
@@ -91,17 +93,29 @@ function enable_commit_button() {
 
 // find existing items and attach events
 function list_startup_existing_item_events() {
-    var list = document.getElementById("mainlist");
-    var child;
-    for(child = list.firstChild; null != child; child = child.nextSibling) {
-        // HACK
-        if(child.getAttribute && "item" == child.getAttribute("class")) {
-            list.addEventListener("click", function() {
-                    item_click_event(child);
+    // attach remove events to the 'x' links
+    list = document.getElementsByTagName("a");
+    for(var i = 0; i < list.length; ++i) {
+        var link = list[i];
+        var c = link.getAttribute("class");
+        if("remove" == c) {
+            link.addEventListener("click", function() {
+                remove_item(link.parentNode);
             }, false);
         }
     }
-    
+
+    // attach item click events to existing items
+    var list = document.getElementsByTagName("li");
+    for(var i = 0; i < list.length; ++i) {
+        var li = list[i];
+        var c = li.getAttribute("class");
+        if("item" == c) {
+            li.addEventListener("click", function() {
+                item_click_event(li);
+            }, false);
+        }
+    }
 }
 
 function list_startup() {
@@ -155,9 +169,9 @@ function commit_changes() {
 }
 
 function debug(text) {
-    //debugarea = document.getElementById("debugarea");
-    //debugarea.value += '\n' + text;
-    //debugarea.scrollTop = debugarea.scrollHeight;
+    debugarea = document.getElementById("debugarea");
+    debugarea.value += '\n' + text;
+    debugarea.scrollTop = debugarea.scrollHeight;
 }
 
 function addOnloadEvent(fun) {
