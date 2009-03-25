@@ -22,6 +22,7 @@
 function remove_item(item) {
     var pa = item.parentNode;
     pa.removeChild(item);
+    debug("remove_item");
 }
 
 function newitem(text) {
@@ -51,11 +52,9 @@ function additem(text) {
 
 function deselect_all_items() {
     var list = document.getElementById("mainlist");
-    debug(list.childNodes.length);
     for(var child = list.firstChild; null != child; child = child.nextSibling) {
         if(child.setAttribute) {
             child.setAttribute("class", "item");
-            debug(child.getAttribute("class"));
         } // could be text node?
     }
 }
@@ -78,7 +77,9 @@ function list_startup() {
 }
 
 function debug(text) {
-    document.getElementById("debugarea").value = text;
+    debugarea = document.getElementById("debugarea");
+    debugarea.value += '\n' + text;
+    debugarea.scrollTop = debugarea.scrollHeight;
 }
 
 </script>
@@ -90,6 +91,6 @@ function debug(text) {
 <input type="submit" onclick="debugme();" value="debugme" />
 <input type="submit" onclick="additem_button();" value="new item" />
 <hr />
-<input type="text" value="debugarea" id="debugarea" />
+<textarea style="width:100%;" rows="20" id="debugarea"></textarea>
 
 </body></html>
