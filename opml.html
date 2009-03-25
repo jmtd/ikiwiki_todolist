@@ -75,6 +75,10 @@ if(evt.keyCode == 40) { //down
                 }
             }
             select_item(newfocus.firstChild);
+        } else if(13 == evt.keyCode) { // return
+            // deselect current item
+            var foo;
+            foo = get_cursor();
         }
 
     }, false);
