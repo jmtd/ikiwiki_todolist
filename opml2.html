@@ -7,7 +7,6 @@
     background: #cfc;
     padding-left: 1em;
     padding-right: 1em;
-    border: 1px solid black;
 }
 .selected {
     border: 1px solid red;
@@ -36,10 +35,22 @@ function newitem(text) {
     li.appendChild(document.createTextNode(text + ' '));
     li.appendChild(a);
     li.addEventListener("click", function() {
-        select_item(li);
+        if(li.parentNode) {
+            if(item_is_selected(li)) {
+                edit_item_text(li);
+            } else {
+                select_item(li);
+            }
+        }
     }, false);
     li.setAttribute("class", "item");
     return li;
+}
+
+function edit_item_text(item) {
+    var text = prompt("item text", "item text goes here");
+    var ni = newitem(text);
+    item.parentNode.replaceChild(ni, item);
 }
 
 function additem(text) {
@@ -59,9 +70,14 @@ function deselect_all_items() {
     }
 }
 
+function item_is_selected(item) {
+    return "selected item" == item.getAttribute("class");
+}
+
 function select_item(item) {
     deselect_all_items();
     item.setAttribute("class", "selected item");
+    debug("select_item");
 }
 
 //////////////////////////////////////////////////////////////////////////////

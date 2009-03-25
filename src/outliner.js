@@ -10,6 +10,16 @@ function remove_item(item) {
     enable_commit_button();
 }
 
+function item_click_event(item) {
+    if(item.parentNode) {
+        if(item_is_selected(item)) {
+            edit_item_text(item);
+        } else {
+            select_item(item);
+        }
+    }
+}
+
 function newitem(text) {
     var li = document.createElement("li");
     var a = document.createElement("a");
@@ -20,14 +30,8 @@ function newitem(text) {
     }, false);
     li.appendChild(document.createTextNode(text + ' '));
     li.appendChild(a);
-    li.addEventListener("click", function() {
-        if(li.parentNode) {
-            if(item_is_selected(li)) {
-                edit_item_text(li);
-            } else {
-                select_item(li);
-            }
-        }
+    li.addEventListener("click",  function () {
+        item_click_event(li);
     }, false);
     li.setAttribute("class", "item");
     return li;
@@ -84,10 +88,26 @@ function enable_commit_button() {
     input.setAttribute("style", "display: inline;");
 }
 
+// find existing items and attach events
+function list_startup_existing_item_events() {
+    var list = document.getElementById("mainlist");
+    var child;
+    for(child = list.firstChild; null != child; child = child.nextSibling) {
+        // HACK
+        if(child.getAttribute && "item" == child.getAttribute("class")) {
+            list.addEventListener("click", function() {
+                    item_click_event(child);
+            }, false);
+        }
+    }
+    
+}
+
 function list_startup() {
+    list_startup_existing_item_events();
+
     var list = document.getElementById("mainlist");
     var input = document.createElement("input");
-
     var input2 = document.createElement("input");
     input2.type = "submit";
     input2.value = "Commit changes";
