@@ -15,9 +15,9 @@
 </style>
 <script lang="text/javascript">
 
-function debug(text) {
-    document.getElementById("debugarea").value = text;
-}
+
+//////////////////////////////////////////////////////////////////////////////
+// manipulating items
 
 function remove_item(item) {
     var pa = item.parentNode;
@@ -37,10 +37,6 @@ function newitem(text) {
     return li;
 }
 
-function additem_button() {
-    additem("new item");
-}
-
 function additem(text) {
     var list = document.getElementById("mainlist");
     var item = newitem(text);
@@ -48,9 +44,20 @@ function additem(text) {
     debug("new item added");
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// global event hooks and functions
+
+function additem_button() {
+    additem("new item");
+}
+
 function list_startup() {
     additem("first item");
     debug("lift-off");
+}
+
+function debug(text) {
+    document.getElementById("debugarea").value = text;
 }
 
 </script>
