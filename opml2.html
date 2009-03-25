@@ -34,6 +34,10 @@ function newitem(text) {
     }, false);
     li.appendChild(document.createTextNode(text + ' '));
     li.appendChild(a);
+    li.addEventListener("click", function() {
+        select_item(li);
+    }, false);
+    li.setAttribute("class", "item");
     return li;
 }
 
@@ -42,6 +46,10 @@ function additem(text) {
     var item = newitem(text);
     list.appendChild(item);
     debug("new item added");
+}
+
+function select_item(item) {
+    item.setAttribute("class", "selected item");
 }
 
 //////////////////////////////////////////////////////////////////////////////
