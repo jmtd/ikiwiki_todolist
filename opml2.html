@@ -19,7 +19,26 @@ function debug(text) {
     document.getElementById("debugarea").value = text;
 }
 
+function newitem(text) {
+    var li = document.createElement("li");
+    var txt = document.createTextNode(text);
+    li.appendChild(txt);
+    return li;
+}
+
+function additem_button() {
+    additem("new item");
+}
+
+function additem(text) {
+    var list = document.getElementById("mainlist");
+    var item = newitem(text);
+    list.appendChild(item);
+    debug("new item added");
+}
+
 function list_startup() {
+    additem("first item");
     debug("lift-off");
 }
 
@@ -30,7 +49,7 @@ function list_startup() {
 <ul id="mainlist">
 </ul>
 <input type="submit" onclick="debugme();" value="debugme" />
-<input type="submit" onclick="additem();" value="new item" />
+<input type="submit" onclick="additem_button();" value="new item" />
 <hr />
 <input type="text" value="debugarea" id="debugarea" />
 
