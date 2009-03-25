@@ -14,6 +14,15 @@
 }
 </style>
 <script lang="text/javascript">
+
+function debug(text) {
+    document.getElementById("debugarea").value = text;
+}
+
+function list_startup() {
+    debug("lift-off");
+}
+
 </script>
 
 </head>
@@ -22,4 +31,7 @@
 </ul>
 <input type="submit" onclick="debugme();" value="debugme" />
 <input type="submit" onclick="additem();" value="new item" />
+<hr />
+<input type="text" value="debugarea" id="debugarea" />
+
 </body></html>
