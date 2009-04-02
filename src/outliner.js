@@ -144,7 +144,7 @@ function list_startup() {
 }
 
 function commit_changes() {
-
+    debug("committing...");
     deselect_all_items(); // so we don't save an active item
     // get the ikiwiki_session_wiki cookie and stick it into our encoded URL
     // as sid=
@@ -163,9 +163,9 @@ function commit_changes() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState==4) {
             disable_commit_button();
+	    debug("committed.");
         }
     }
-
 }
 
 function debug(text) {
