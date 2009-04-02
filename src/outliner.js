@@ -164,7 +164,9 @@ function commit_changes() {
         if (xhr.readyState==4) {
             disable_commit_button();
 	    debug("committed.");
-        }
+        } else {
+	    debug("xhr.readyState == " + xhr.readyState);
+	}
     }
 }
 
