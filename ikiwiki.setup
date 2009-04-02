@@ -15,14 +15,15 @@ use IkiWiki::Setup::Standard {
 	# users who are banned from the wiki
 	banned_users => [],
 	# where the source of the wiki is located
-	srcdir => '/home/jon/wd/mine/outliner/src',
-	destdir => '/home/jon/wd/mine/outliner/dest',
+
+	srcdir => '/home/jon/www/dev.ikiwiki/outliner/src',
+	destdir => '/home/jon/www/dev.ikiwiki/public/outliner',
 	# base url to the wiki
-	url => 'http://localhost/outliner/',
+	url => 'http://dev.alcopop.org/outliner/',
 	# url to the ikiwiki.cgi
-	cgiurl => 'http://localhost/cgi',
+	cgiurl => 'http://dev.alcopop.org/outliner.cgi',
 	# filename of cgi wrapper to generate
-	cgi_wrapper => '/home/jon/wd/mine/outliner/cgi',
+	cgi_wrapper => '/home/jon/www/dev.ikiwiki/outliner/cgi',
 	# mode for cgi_wrapper (can safely be made suid)
 	cgi_wrappermode => '06755',
 	# rcs backend to use
@@ -32,7 +33,7 @@ use IkiWiki::Setup::Standard {
 	# plugins to disable
 	disable_plugins => [qw{ passwordauth openid }],
 	# location of template files
-	templatedir => '/home/jon/wd/mine/outliner/templates',
+	templatedir => '/home/jon/www/dev.ikiwiki/outliner/templates',
 	# base wiki source location
 	underlaydir => '/usr/share/ikiwiki/basewiki',
 	# display verbose messages?

@@ -153,7 +153,7 @@ function commit_changes() {
     var encoded = "_submitted=1&do=edit&from=&rcsinfo=&page=chris&type=jonlist&_submit=Save+Page&sid=074cf498d7e21c382c5f5a18e0dee56b&editcontent=";
     encoded += escape('<ul id="mainlist">'+mainlist.innerHTML+'</ul>');
     var xhr = XMLHttpRequest();
-    xhr.open("POST", "http://localhost/cgi", true);
+    xhr.open("POST", "http://dev.alcopop.org/outliner.cgi", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.setRequestHeader("Content-Length", encoded.length);
     xhr.setRequestHeader("Connection", "close");
