@@ -3,9 +3,40 @@
 //////////////////////////////////////////////////////////////////////////////
 // manipulating items
 
+function strike_item(item) {
+    if(!item_is_struck(item)) {
+        var del = document.createElement("del");
+        var txt = item.firstChild;
+        item.removeChild(txt);
+        del.appendChild(txt);
+        item.insertBefore(del,item.firstChild);
+        debug("strike_item");
+        enable_commit_button();
+    }
+}
+
+function item_is_struck(item)  {
+    var txt = item.firstChild;
+    debug("is item struck? " + txt.nodeName);
+    return (txt.nodeName == "del" || txt.nodeName == "DEL");
+}
+
+function remove_struck_items() {
+    var list = document.getElementById("mainlist");
+    var removeme = [];
+    for(var i = 0; i < list.childNodes.length; ++i) {
+	var c = list.childNodes[i];
+	if(item_is_struck(c)) {
+		removeme[removeme.length] = c;
+	}
+    }
+    for(var i = 0; i < removeme.length; ++i) {
+	remove_item(removeme[i]);
+    }
+}
+
 function remove_item(item) {
     var list = document.getElementById("mainlist");
-    var pa = item.parentNode;
     list.removeChild(item);
     debug("remove_item");
     enable_commit_button();
@@ -27,8 +58,10 @@ function newitem(text) {
     a.href = '#';
     a.appendChild(document.createTextNode("x"));
     a.setAttribute("class", "remove");
-    a.addEventListener("click", function () {
-        remove_item(li);
+    a.addEventListener("click", function (e) {
+        strike_item(li);
+	e.stopPropagation();
+	e.preventDefault();
     }, false);
     li.appendChild(document.createTextNode(text + ' '));
     li.appendChild(a);
@@ -100,22 +133,34 @@ function list_startup_existing_item_events() {
         var c = link.getAttribute("class");
         if("remove" == c) {
             link.addEventListener("click", function() {
-                remove_item(link.parentNode);
+                strike_item(link.parentNode);
             }, false);
         }
     }
 
-    // attach item click events to existing items
-    var list = document.getElementsByTagName("li");
-    for(var i = 0; i < list.length; ++i) {
-        var li = list[i];
+    var list = document.getElementById("mainlist");
+    for(var i = 0; i < list.childNodes.length; ++i) {
+        var li = list.childNodes[i];
+	alert(li.innerHTML);
         var c = li.getAttribute("class");
         if("item" == c) {
+            var li2 = li;
             li.addEventListener("click", function() {
-                item_click_event(li);
+                item_click_event(li2);
             }, false);
         }
     }
+    // attach item click events to existing items
+//    var list = document.getElementsByTagName("li");
+//    for(var i = 0; i < list.length; ++i) {
+//        var li = list[i];
+//        var c = li.getAttribute("class");
+//        if("item" == c) {
+//            li.addEventListener("click", function() {
+//                item_click_event(li);
+//            }, false);
+//        }
+//    }
 }
 
 function list_startup() {
@@ -124,6 +169,7 @@ function list_startup() {
     var list = document.getElementById("mainlist");
     var input = document.createElement("input");
     var input2 = document.createElement("input");
+    var input3 = document.createElement("input");
     input2.type = "submit";
     input2.value = "Commit changes";
     input2.setAttribute("id", "commitbutton");
@@ -137,8 +183,15 @@ function list_startup() {
         additem_button();
     }, false);
 
+    input3.type = "submit";
+    input3.value = "remove struck items";
+    input3.addEventListener("click", function() {
+	remove_struck_items();
+    }, false);
+
     list.parentNode.insertBefore(input, list.nextSibling);
     list.parentNode.insertBefore(input2, input.nextSibling);
+    list.parentNode.insertBefore(input3, input.nextSibling);
     disable_commit_button();
     debug("lift-off");
 }
@@ -146,12 +199,15 @@ function list_startup() {
 function commit_changes() {
     debug("committing...");
     deselect_all_items(); // so we don't save an active item
+    remove_struck_items();
     // get the ikiwiki_session_wiki cookie and stick it into our encoded URL
     // as sid=
     // TODO: need to customize page= param
     var mainlist = document.getElementById("mainlist");
-    var encoded = "_submitted=1&do=edit&from=&rcsinfo=&page=chris&type=jonlist&_submit=Save+Page&sid=074cf498d7e21c382c5f5a18e0dee56b&editcontent=";
-    encoded += escape('<ul id="mainlist">'+mainlist.innerHTML+'</ul>');
+    var encoded = "_submitted=1&do=edit&from=&rcsinfo=&type=jonlist&_submit=Save+Page&sid=074cf498d7e21c382c5f5a18e0dee56b=";
+    encoded += "&page=" + escape(document.title); // UNRELIABLE
+    encoded += "&editcontent=" + escape('<ul id="mainlist">'+mainlist.innerHTML+'</ul>');
+    encoded += escape('<textarea id="debugarea"></textarea>');
     var xhr = XMLHttpRequest();
     xhr.open("POST", "http://dev.alcopop.org/outliner.cgi", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

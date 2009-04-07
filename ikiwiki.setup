@@ -29,7 +29,7 @@ use IkiWiki::Setup::Standard {
 	# rcs backend to use
 	rcs => '',
 	# plugins to add to the default configuration
-	add_plugins => [qw{ goodstuff anonok jonlist }],
+	add_plugins => [qw{ goodstuff anonok jonlist remove}],
 	# plugins to disable
 	disable_plugins => [qw{ passwordauth openid }],
 	# location of template files
