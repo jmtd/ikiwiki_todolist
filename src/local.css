@@ -1,0 +1,11 @@
+.item_text {
+    background: #ccc;
+}
+.item {
+    background: #cfc;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+.selected {
+    border: 1px solid red;
+}
