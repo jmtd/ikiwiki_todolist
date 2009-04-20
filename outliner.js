@@ -168,7 +168,6 @@ function list_startup() {
     var list = document.getElementById("mainlist");
     var input = document.createElement("input");
     var input2 = document.createElement("input");
-    var input3 = document.createElement("input");
     input2.type = "submit";
     input2.value = "Commit changes";
     input2.setAttribute("id", "commitbutton");
@@ -182,15 +181,8 @@ function list_startup() {
         additem_button();
     }, false);
 
-    input3.type = "submit";
-    input3.value = "remove struck items";
-    input3.addEventListener("click", function() {
-	remove_struck_items();
-    }, false);
-
     list.parentNode.insertBefore(input, list.nextSibling);
     list.parentNode.insertBefore(input2, input.nextSibling);
-    list.parentNode.insertBefore(input3, input.nextSibling);
     disable_commit_button();
     debug("lift-off");
 }
