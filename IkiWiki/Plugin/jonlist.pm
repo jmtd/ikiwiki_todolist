@@ -18,9 +18,19 @@ sub htmlize () {
     return "$content";
 }
 
+# add a template for our javascript whatsit
 sub pagetemplate () {
     my %params=@_;
     my $template = $params{template};
+    my $doohicky = "<script lang=\"text/javascript\">
+	// hello world
+    </script>";
+
+    my $jonplugin = "jonvar";
+    if ($page !~ /.*\/\Q$jonplugin\E$/ ) { 
+        $template->param(have_actions => 1);
+        $template->param(jonvar => $doohicky);
+    }
 }
 
 1
