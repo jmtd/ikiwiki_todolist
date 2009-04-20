@@ -209,7 +209,7 @@ function commit_changes() {
     encoded += "&editcontent=" + escape('<ul id="mainlist">'+mainlist.innerHTML+'</ul>');
     encoded += escape('<textarea id="debugarea"></textarea>');
     var xhr = XMLHttpRequest();
-    xhr.open("POST", "http://dev.alcopop.org/outliner.cgi", true);
+    xhr.open("POST", "http://dev.jmtd.net/outliner.cgi", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.setRequestHeader("Content-Length", encoded.length);
     xhr.setRequestHeader("Connection", "close");
