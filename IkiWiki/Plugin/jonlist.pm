@@ -21,9 +21,12 @@ sub htmlize () {
 # add a template for our javascript whatsit
 sub pagetemplate () {
     my %params=@_;
+	my $page=$params{page};
     my $template = $params{template};
+    my $cgiurl = $config{cgiurl};
     my $doohicky = "<script lang=\"text/javascript\">
 	// hello world
+	cgiurl = \"$cgiurl\";
     </script>";
 
     my $jonplugin = "jonvar";
