@@ -141,7 +141,6 @@ function list_startup_existing_item_events() {
     var list = document.getElementById("mainlist");
     for(var i = 0; i < list.childNodes.length; ++i) {
         var li = list.childNodes[i];
-	alert(li.innerHTML);
         var c = li.getAttribute("class");
         if("item" == c) {
             var li2 = li;
@@ -209,7 +208,6 @@ function commit_changes() {
     encoded += "&editcontent=" + escape('<ul id="mainlist">'+mainlist.innerHTML+'</ul>');
     encoded += escape('<textarea id="debugarea"></textarea>');
     var xhr = XMLHttpRequest();
-    alert(cgiurl);
     xhr.open("POST", cgiurl, true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.setRequestHeader("Content-Length", encoded.length);
