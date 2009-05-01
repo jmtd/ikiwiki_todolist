@@ -54,17 +54,8 @@ function item_click_event(item) {
 
 function newitem(text) {
     var li = document.createElement("li");
-    var a = document.createElement("a");
-    a.href = '#';
-    a.appendChild(document.createTextNode("x"));
-    a.setAttribute("class", "remove");
-    a.addEventListener("click", function (e) {
-        strike_item(li);
-	e.stopPropagation();
-	e.preventDefault();
-    }, false);
     li.appendChild(document.createTextNode(text + ' '));
-    li.appendChild(a);
+    add_removebutton_to_item(li);
     li.addEventListener("click",  function () {
         item_click_event(li);
     }, false);
@@ -146,18 +137,7 @@ function list_startup_existing_item_events() {
         // linkify mainlist.childNodes[i]
         add_removebutton_to_item(mainlist.childNodes[i]);
     }
-    list = document.getElementsByTagName("a");
-    for(var i = 0; i < list.length; ++i) {
-        var link = list[i];
-        var c = link.getAttribute("class");
-        if("remove" == c) {
-            link.addEventListener("click", function() {
-                strike_item(link.parentNode);
-            }, false);
-        }
-    }
-
-    var list = document.getElementById("mainlist");
+    var list = mainlist;
     for(var i = 0; i < list.childNodes.length; ++i) {
         var li = list.childNodes[i];
         var c = li.getAttribute("class");
@@ -168,17 +148,6 @@ function list_startup_existing_item_events() {
             }, false);
         }
     }
-    // attach item click events to existing items
-//    var list = document.getElementsByTagName("li");
-//    for(var i = 0; i < list.length; ++i) {
-//        var li = list[i];
-//        var c = li.getAttribute("class");
-//        if("item" == c) {
-//            li.addEventListener("click", function() {
-//                item_click_event(li);
-//            }, false);
-//        }
-//    }
 }
 
 function list_startup() {
