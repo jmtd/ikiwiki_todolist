@@ -15,7 +15,11 @@ sub import {
 sub htmlize () {
     my %params=@_;
     my $content = $params{content};
-    return "$content";
+    my $retstr = "";
+    foreach my $line (split("\n", $content)) {
+        $restr += "<li>$line</li>";
+    }
+    return "<ul id=\"mainlist\">$retstr</ul>";
 }
 
 # add a template for our javascript whatsit
