@@ -8,7 +8,6 @@ use IkiWiki 3.00;
 
 sub import {
     hook(type => "htmlize", id => "jonlist", call => \&htmlize);
-    hook(type => "pagetemplate", id => "jonlist", call => \&pagetemplate);
 }
 
 # for now, we will just pass the content straight through
@@ -17,7 +16,7 @@ sub htmlize () {
     my $content = $params{content};
     my $retstr = "";
     foreach my $line (split("\n", $content)) {
-        $restr += "<li>$line</li>";
+        $retstr .= "<li>$line</li>";
     }
     return "<ul id=\"mainlist\">$retstr</ul>";
 }
