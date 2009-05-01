@@ -127,6 +127,9 @@ function enable_commit_button() {
 // find existing items and attach events
 function list_startup_existing_item_events() {
     // attach remove events to the 'x' links
+    var mainlist = document.getElementById("mainlist");
+    var children = mainlist.childNodes();
+    alert(children.length);
     list = document.getElementsByTagName("a");
     for(var i = 0; i < list.length; ++i) {
         var link = list[i];
