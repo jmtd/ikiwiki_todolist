@@ -167,6 +167,15 @@ function list_startup_existing_item_events() {
     }
 }
 
+function append_debug_area() {
+    var list = document.getElementById("mainlist");
+    if(list) {
+        var da = document.createElement("textarea");
+        da.setAttribute("id","debugarea");
+        list.parentNode.appendChild(da);
+    }
+}
+
 function list_startup() {
     list_startup_existing_item_events();
 
@@ -189,6 +198,7 @@ function list_startup() {
     list.parentNode.insertBefore(input, list.nextSibling);
     list.parentNode.insertBefore(input2, input.nextSibling);
     disable_commit_button();
+    append_debug_area();
     debug("lift-off");
 }
 
@@ -207,8 +217,11 @@ function commit_changes() {
     // TODO: need to customize page= param
     var encoded = "_submitted=1&do=edit&from=&rcsinfo=&type=jonlist&_submit=Save+Page&sid=074cf498d7e21c382c5f5a18e0dee56b=";
     encoded += "&page=" + escape(document.title); // UNRELIABLE
-    encoded += "&editcontent=" + escape('<ul id="mainlist">'+mainlist.innerHTML+'</ul>');
-    encoded += escape('<textarea id="debugarea"></textarea>');
+    encoded += "&editcontent=";
+    for(i = 0; i < mainlist.childNodes.length; ++i) {
+        var txt = mainlist.childNodes[i].firstChild.nodeValue;
+        encoded += escape(txt + "\n");
+    }
     var xhr = XMLHttpRequest();
     xhr.open("POST", cgiurl, true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
