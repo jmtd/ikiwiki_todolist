@@ -129,6 +129,19 @@ function add_removebutton_to_item(item) {
     item.appendChild(a);
 }
 
+function remove_removebutton_from_item(item) {
+    for(var i = 0; i < item.childNodes.length; ++i) {
+	if(("a" == item.childNodes[i].nodeName ||
+            "A" == item.childNodes[i].nodeName) &&
+           "remove" == item.childNodes[i].getAttribute("class")) {
+            item.removeChild(item.childNodes[i]);
+            return;
+        }
+    }
+    // XXX
+    debug("error: tried to remove removebutton and there isn't one");
+}
+
 // find existing items and attach events
 function list_startup_existing_item_events() {
     // attach remove events to the 'x' links
@@ -177,12 +190,17 @@ function list_startup() {
 
 function commit_changes() {
     debug("committing...");
+    var mainlist = document.getElementById("mainlist");
+
     deselect_all_items(); // so we don't save an active item
     remove_struck_items();
+    for(i = 0; i < mainlist.childNodes.length; ++i) {
+        remove_removebutton_from_item(mainlist.childNodes[i]);
+    }
+
     // get the ikiwiki_session_wiki cookie and stick it into our encoded URL
     // as sid=
     // TODO: need to customize page= param
-    var mainlist = document.getElementById("mainlist");
     var encoded = "_submitted=1&do=edit&from=&rcsinfo=&type=jonlist&_submit=Save+Page&sid=074cf498d7e21c382c5f5a18e0dee56b=";
     encoded += "&page=" + escape(document.title); // UNRELIABLE
     encoded += "&editcontent=" + escape('<ul id="mainlist">'+mainlist.innerHTML+'</ul>');
