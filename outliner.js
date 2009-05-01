@@ -117,22 +117,24 @@ function enable_commit_button() {
 
 function add_removebutton_to_item(item) {
     var a = document.createElement("a");
+    var span = document.createElement("span");
     a.href = '#';
     a.appendChild(document.createTextNode("x"));
-    a.setAttribute("class", "remove");
     a.addEventListener("click", function (e) {
         strike_item(item);
 	e.stopPropagation();
 	e.preventDefault();
     }, false);
-    item.appendChild(document.createTextNode(" "));
-    item.appendChild(a);
+    span.setAttribute("class", "remove");
+    span.appendChild(document.createTextNode(" "));
+    span.appendChild(a);
+    item.appendChild(span);
 }
 
 function remove_removebutton_from_item(item) {
     for(var i = 0; i < item.childNodes.length; ++i) {
-	if(("a" == item.childNodes[i].nodeName ||
-            "A" == item.childNodes[i].nodeName) &&
+	if(("span" == item.childNodes[i].nodeName ||
+            "SPAN" == item.childNodes[i].nodeName) &&
            "remove" == item.childNodes[i].getAttribute("class")) {
             item.removeChild(item.childNodes[i]);
             return;
