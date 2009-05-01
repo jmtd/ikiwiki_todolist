@@ -29,10 +29,12 @@ sub pagetemplate () {
 	my $page=$params{page};
     my $template = $params{template};
     my $cgiurl = $config{cgiurl};
+    my $url = urlto("outliner.js", $page);
     my $doohicky = "<script lang=\"text/javascript\">
-	// hello world
 	cgiurl = \"$cgiurl\";
-    </script>";
+    </script>
+    <script type="text/javascript" src=\"$url\" ></script>
+";
 
     my $jonplugin = "jonvar";
     if ($page !~ /.*\/\Q$jonplugin\E$/ ) { 
