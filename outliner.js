@@ -124,12 +124,28 @@ function enable_commit_button() {
     input.setAttribute("style", "display: inline;");
 }
 
+function add_removebutton_to_item(item) {
+    var a = document.createElement("a");
+    a.href = '#';
+    a.appendChild(document.createTextNode("x"));
+    a.setAttribute("class", "remove");
+    a.addEventListener("click", function (e) {
+        strike_item(item);
+	e.stopPropagation();
+	e.preventDefault();
+    }, false);
+    item.appendChild(document.createTextNode(" "));
+    item.appendChild(a);
+}
+
 // find existing items and attach events
 function list_startup_existing_item_events() {
     // attach remove events to the 'x' links
     var mainlist = document.getElementById("mainlist");
-    var children = mainlist.childNodes();
-    alert(children.length);
+    for(var i = 0; i < mainlist.childNodes.length; ++i) {
+        // linkify mainlist.childNodes[i]
+        add_removebutton_to_item(mainlist.childNodes[i]);
+    }
     list = document.getElementsByTagName("a");
     for(var i = 0; i < list.length; ++i) {
         var link = list[i];
