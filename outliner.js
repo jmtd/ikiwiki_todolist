@@ -64,7 +64,7 @@ function newitem(text) {
 }
 
 function edit_item_text(item) {
-    var text = prompt("item text", "item text goes here");
+    var text = prompt("item text", item.firstChild.nodeValue);
     if(text) {
         var ni = newitem(text);
         item.parentNode.replaceChild(ni, item);
