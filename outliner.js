@@ -65,9 +65,11 @@ function newitem(text) {
 
 function edit_item_text(item) {
     var text = prompt("item text", "item text goes here");
-    var ni = newitem(text);
-    item.parentNode.replaceChild(ni, item);
-    enable_commit_button();
+    if(text) {
+        var ni = newitem(text);
+        item.parentNode.replaceChild(ni, item);
+        enable_commit_button();
+    }
 }
 
 function additem(text) {
