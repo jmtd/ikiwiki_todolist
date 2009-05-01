@@ -206,11 +206,7 @@ function commit_changes() {
     debug("committing...");
     var mainlist = document.getElementById("mainlist");
 
-    deselect_all_items(); // so we don't save an active item
     remove_struck_items();
-    for(i = 0; i < mainlist.childNodes.length; ++i) {
-        remove_removebutton_from_item(mainlist.childNodes[i]);
-    }
 
     // get the ikiwiki_session_wiki cookie and stick it into our encoded URL
     // as sid=
