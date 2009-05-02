@@ -71,18 +71,20 @@ function newitem(text) {
 function edit_item_text(item) {
     // XXX: might end up with superfluous <div>s in the item text
     var text = item.firstChild.innerHTML;
+
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("value", text);
+    input.setAttribute("id", "zomglol");
     item.replaceChild(input, item.firstChild);
     input.addEventListener("keypress", function(e) {
         if(13 == e.keyCode) { // return
-            alert("we should do something here");
-            alert(input.getAttribute("value"));
-            alert(item.innerHTML);
+            var div = document.createElement("div");
+            div.appendChild(document.createTextNode(input.value));
+            item.replaceChild(div, input);
+            enable_commit_button();
         }
     }, false);
-    // TODO: add an event for submission
 }
 
 function additem(text) {
