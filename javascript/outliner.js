@@ -216,7 +216,7 @@ function commit_changes() {
     // as sid=
     // TODO: need to customize page= param
     var encoded = "_submitted=1&do=edit&from=&rcsinfo=&type=jonlist&_submit=Save+Page&sid=074cf498d7e21c382c5f5a18e0dee56b=";
-    encoded += "&page=" + escape(document.title); // UNRELIABLE
+    encoded += "&page=" + escape(page);
     encoded += "&editcontent=";
     for(i = 0; i < mainlist.childNodes.length; ++i) {
         var txt = mainlist.childNodes[i].firstChild.nodeValue;

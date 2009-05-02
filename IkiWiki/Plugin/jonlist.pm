@@ -31,6 +31,7 @@ sub pagetemplate () {
     my $cgiurl = $config{cgiurl};
     my $doohicky = "<script lang=\"text/javascript\">
 	cgiurl = \"$cgiurl\";
+	page = \"$page\";
     </script>
     ".include_javascript($params{page}, 1);
 
