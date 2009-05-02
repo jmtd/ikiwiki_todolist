@@ -10,8 +10,6 @@ sub import {
     add_underlay("javascript");
     hook(type => "htmlize", id => "jonlist", call => \&htmlize);
     hook(type => "pagetemplate", id => "jonlist", call => \&pagetemplate);
-
-
 }
 
 # for now, we will just pass the content straight through
@@ -22,8 +20,7 @@ sub htmlize () {
     foreach my $line (split("\n", $content)) {
         $retstr .= "<li>$line</li>";
     }
-    return include_javascript($params{page}, 1).
-           "\n<ul id=\"mainlist\">$retstr</ul>";
+    return "\n<ul id=\"mainlist\">$retstr</ul>";
 }
 
 # add a template for our javascript whatsit
@@ -35,7 +32,7 @@ sub pagetemplate () {
     my $doohicky = "<script lang=\"text/javascript\">
 	cgiurl = \"$cgiurl\";
     </script>
-";
+    ".include_javascript($params{page}, 1);
 
     my $jonplugin = "jonvar";
     if ($page !~ /.*\/\Q$jonplugin\E$/ ) { 
