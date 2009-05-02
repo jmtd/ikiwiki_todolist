@@ -17,3 +17,9 @@
 #debugarea {
 	width: 80%;
 }
+#mainlist li .remove {
+	display: none;
+}
+#mainlist li:hover .remove {
+	display: inline;
+}
