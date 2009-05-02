@@ -151,19 +151,11 @@ function list_startup_existing_item_events() {
     // attach remove events to the 'x' links
     var mainlist = document.getElementById("mainlist");
     for(var i = 0; i < mainlist.childNodes.length; ++i) {
-        // linkify mainlist.childNodes[i]
-        add_removebutton_to_item(mainlist.childNodes[i]);
-    }
-    var list = mainlist;
-    for(var i = 0; i < list.childNodes.length; ++i) {
-        var li = list.childNodes[i];
-        var c = li.getAttribute("class");
-        if("item" == c) {
-            var li2 = li;
-            li.addEventListener("click", function() {
-                item_click_event(li2);
-            }, false);
-        }
+        var li = mainlist.childNodes[i];
+        add_removebutton_to_item(li);
+        li.addEventListener("click", function() {
+            item_click_event(li);
+        }, false);
     }
 }
 
