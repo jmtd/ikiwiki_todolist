@@ -1,6 +1,9 @@
 .item_text {
     background: #ccc;
 }
+#mainlist li div {
+    display: inline;
+}
 #mainlist li {
     background: #cfc;
     padding-left: 1em;
