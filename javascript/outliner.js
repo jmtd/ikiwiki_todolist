@@ -148,10 +148,15 @@ function enable_commit_button() {
 }
 
 function add_removebutton_to_item(item) {
+    var text = "strikeout";
+    if("del" == item.firstChild.nodeName ||
+       "DEL" == item.firstChild.nodeName) {
+        text = "unstrike";
+    }
     var a = document.createElement("a");
     var span = document.createElement("span");
     a.href = '#';
-    a.appendChild(document.createTextNode("remove"));
+    a.appendChild(document.createTextNode(text));
     a.addEventListener("click", function (e) {
         toggle_strike_item(item);
 	e.stopPropagation();
