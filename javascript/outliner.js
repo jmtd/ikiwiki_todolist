@@ -4,24 +4,20 @@
 // manipulating items
 
 function toggle_strike_item(item) {
-    if(!item_is_struck(item)) {
-        var del = document.createElement("del");
-        var txt = item.firstChild;
-        item.removeChild(txt);
-        del.appendChild(txt);
-        item.insertBefore(del,item.firstChild);
-        debug("strike_item");
-        enable_commit_button();
-    } else {
-        var del = item.firstChild;
-        item.removeChild(del);
-     	var first = item.firstChild;
-        while(del.childNodes.length > 0) {
-            var something = del.firstChild;
-            del.removeChild(something);
-	    item.insertBefore(something, first);
-        }
+    var newtag = "del";
+    if(item_is_struck(item)) {
+        newtag = "div";
     }
+    var newelement = document.createElement(newtag);
+    var oldelement = item.firstChild;
+    while(oldelement.childNodes.length > 0) {
+        var fc = oldelement.firstChild;
+        oldelement.removeChild(fc);
+        newelement.appendChild(fc);
+    }
+    item.replaceChild(newelement, oldelement);
+    debug("strike_item");
+    enable_commit_button();
 }
 
 function item_is_struck(item)  {
