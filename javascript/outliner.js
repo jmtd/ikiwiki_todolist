@@ -68,9 +68,7 @@ function newitem(text) {
     var li = document.createElement("li");
     li.appendChild(document.createTextNode(text));
     add_removebutton_to_item(li);
-    li.addEventListener("click",  function () {
-        item_click_event(li);
-    }, false);
+    add_click_event(li);
     return li;
 }
 
@@ -157,7 +155,6 @@ function remove_removebutton_from_item(item) {
     // XXX
     debug("error: tried to remove removebutton and there isn't one");
 }
-
 
 function add_click_event(item) {
     item.addEventListener("click", function() {
