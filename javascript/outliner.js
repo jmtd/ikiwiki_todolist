@@ -75,6 +75,7 @@ function edit_item_text(item) {
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("value", text);
+    input.setAttribute("size", text.length + 4);
     item.replaceChild(input, item.firstChild);
     input.addEventListener("keypress", function(e) {
         if(13 == e.keyCode) { // return
