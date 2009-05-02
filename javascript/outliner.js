@@ -16,6 +16,8 @@ function toggle_strike_item(item) {
         newelement.appendChild(fc);
     }
     item.replaceChild(newelement, oldelement);
+    remove_removebutton_from_item(item);
+    add_removebutton_from_item(item);
     debug("strike_item");
     enable_commit_button();
 }
