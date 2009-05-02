@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // manipulating items
 
-function strike_item(item) {
+function toggle_strike_item(item) {
     if(!item_is_struck(item)) {
         var del = document.createElement("del");
         var txt = item.firstChild;
@@ -132,7 +132,7 @@ function add_removebutton_to_item(item) {
     a.href = '#';
     a.appendChild(document.createTextNode("x"));
     a.addEventListener("click", function (e) {
-        strike_item(item);
+        toggle_strike_item(item);
 	e.stopPropagation();
 	e.preventDefault();
     }, false);
