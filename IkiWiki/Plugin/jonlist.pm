@@ -29,14 +29,12 @@ sub htmlize () {
 # add a template for our javascript whatsit
 sub pagetemplate () {
     my %params=@_;
-	my $page=$params{page};
+    my $page=$params{page};
     my $template = $params{template};
     my $cgiurl = $config{cgiurl};
-    my $url = urlto("outliner.js", $page, 1);
     my $doohicky = "<script lang=\"text/javascript\">
 	cgiurl = \"$cgiurl\";
     </script>
-    <script type=\"text/javascript\" src=\"$url\" ></script>
 ";
 
     my $jonplugin = "jonvar";
