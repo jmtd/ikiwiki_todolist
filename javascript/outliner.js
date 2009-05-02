@@ -156,7 +156,8 @@ function remove_removebutton_from_item(item) {
 }
 
 function add_click_event(item) {
-    item.addEventListener("click", function() {
+    // XXX: firstChild might not be all of the text
+    item.firstChild.addEventListener("click", function() {
         item_click_event(item);
     }, false);
     debug("add_click_event");
