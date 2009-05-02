@@ -101,6 +101,8 @@ function deselect_all_items() {
 function item_is_selected(item) {
     if(item.childNodes.length > 0) {
         var div = item.firstChild;
+        debug("item_is_selected: " + div.nodeName);
+        debug(div.nodeValue);
         return "selected item" == div.getAttribute("class");
     } else return false;
 }
@@ -164,7 +166,7 @@ function remove_removebutton_from_item(item) {
 function add_click_event(item) {
     div = item.firstChild;
     div.addEventListener("click", function() {
-        item_click_event(div);
+        item_click_event(item);
     }, false);
     debug("add_click_event");
 }
