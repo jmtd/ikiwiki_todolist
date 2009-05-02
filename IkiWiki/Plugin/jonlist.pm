@@ -12,13 +12,12 @@ sub import {
     hook(type => "pagetemplate", id => "jonlist", call => \&pagetemplate);
 }
 
-# for now, we will just pass the content straight through
 sub htmlize () {
     my %params=@_;
     my $content = $params{content};
     my $retstr = "";
     foreach my $line (split("\n", $content)) {
-        $retstr .= "<li>$line</li>";
+        $retstr .= "<li><div>$line</div></li>";
     }
     return "\n<ul id=\"mainlist\">$retstr</ul>";
 }
