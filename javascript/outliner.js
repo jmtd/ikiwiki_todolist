@@ -99,7 +99,10 @@ function deselect_all_items() {
 }
 
 function item_is_selected(item) {
-    return "selected item" == item.getAttribute("class");
+    if(item.childNodes.length > 0) {
+        var div = item.firstChild;
+        return "selected item" == div.getAttribute("class");
+    } else return false;
 }
 
 function select_item(item) {
