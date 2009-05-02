@@ -177,6 +177,10 @@ function append_debug_area() {
 }
 
 function list_startup() {
+    var mainlist = document.getElementById("mainlist");
+    if(!mainlist) {
+        return;
+    }
     list_startup_existing_item_events();
 
     var list = document.getElementById("mainlist");
