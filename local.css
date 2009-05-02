@@ -9,3 +9,6 @@
 .selected {
     border: 1px solid red;
 }
+#debugarea {
+	width: 80%;
+}
