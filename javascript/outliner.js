@@ -90,9 +90,11 @@ function additem(text) {
 function deselect_all_items() {
     var list = document.getElementById("mainlist");
     for(var child = list.firstChild; null != child; child = child.nextSibling) {
-        if(child.setAttribute) {
-            child.setAttribute("class", "item");
-        } // could be text node?
+        if(("LI" == child.nodeName || "li" == child.nodeName) &&
+           child.childNodes.length > 0) {
+            var div = child.firstChild;
+            div.setAttribute("class", "item");
+        }
     }
 }
 
