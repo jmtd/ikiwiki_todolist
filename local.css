@@ -1,7 +1,7 @@
 .item_text {
     background: #ccc;
 }
-.item {
+#mainlist li {
     background: #cfc;
     padding-left: 1em;
     padding-right: 1em;

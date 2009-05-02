@@ -52,10 +52,14 @@ function remove_item(item) {
 }
 
 function item_click_event(item) {
+    debug("got a click event");
+    alert(item.innerHTML);
     if(item.parentNode) {
         if(item_is_selected(item)) {
+            debug("item is already selected");
             edit_item_text(item);
         } else {
+            debug("item is not already selected");
             select_item(item);
         }
     }
@@ -140,6 +144,7 @@ function add_removebutton_to_item(item) {
     span.appendChild(document.createTextNode(" "));
     span.appendChild(a);
     item.appendChild(span);
+    debug("added removebutton");
 }
 
 function remove_removebutton_from_item(item) {
@@ -165,6 +170,7 @@ function list_startup_existing_item_events() {
         li.addEventListener("click", function() {
             item_click_event(li);
         }, false);
+        debug("added click event to " + li.innerHTML);
     }
 }
 
