@@ -107,8 +107,11 @@ function item_is_selected(item) {
 
 function select_item(item) {
     deselect_all_items();
-    item.setAttribute("class", "selected item");
-    debug("select_item");
+    if(item.childNodes.length > 0) {
+        var div = item.firstChild;
+        div.setAttribute("class", "selected item");
+        debug("select_item");
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
