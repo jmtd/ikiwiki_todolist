@@ -12,6 +12,15 @@ function strike_item(item) {
         item.insertBefore(del,item.firstChild);
         debug("strike_item");
         enable_commit_button();
+    } else {
+        var del = item.firstChild;
+        item.removeChild(del);
+     	var first = item.firstChild;
+        while(del.childNodes.length > 0) {
+            var something = del.firstChild;
+            del.removeChild(something);
+	    item.insertBefore(something, first);
+        }
     }
 }
 
