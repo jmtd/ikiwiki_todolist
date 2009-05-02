@@ -52,8 +52,7 @@ function remove_item(item) {
 }
 
 function item_click_event(item) {
-    debug("got a click event");
-    alert(item.innerHTML);
+    debug("got a click event for " +item.innerHTML);
     if(item.parentNode) {
         if(item_is_selected(item)) {
             debug("item is already selected");
