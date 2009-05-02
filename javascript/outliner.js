@@ -72,7 +72,6 @@ function newitem(text) {
     li.addEventListener("click",  function () {
         item_click_event(li);
     }, false);
-    li.setAttribute("class", "item");
     return li;
 }
 
