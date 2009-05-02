@@ -158,17 +158,22 @@ function remove_removebutton_from_item(item) {
     debug("error: tried to remove removebutton and there isn't one");
 }
 
+
+function add_click_event(item) {
+    item.addEventListener("click", function() {
+        item_click_event(item);
+    }, false);
+    debug("added click event to " + item.innerHTML);
+}
+
 // find existing items and attach events
 function list_startup_existing_item_events() {
     // attach remove events to the 'x' links
     var mainlist = document.getElementById("mainlist");
     for(var i = 0; i < mainlist.childNodes.length; ++i) {
         var li = mainlist.childNodes[i];
-        li.addEventListener("click", function() {
-            item_click_event(li);
-        }, false);
         add_removebutton_to_item(li);
-        debug("added click event to " + li.innerHTML);
+	add_click_event(li);
     }
 }
 
