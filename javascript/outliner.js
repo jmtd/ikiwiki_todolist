@@ -251,6 +251,7 @@ function debug(text) {
     debugarea = document.getElementById("debugarea");
     debugarea.value += '\n' + text;
     debugarea.scrollTop = debugarea.scrollHeight;
+    debugarea.rows = "10";
 }
 
 function addOnloadEvent(fun) {
