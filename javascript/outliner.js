@@ -182,6 +182,7 @@ function list_startup() {
     if(!mainlist) {
         return;
     }
+    append_debug_area();
     list_startup_existing_item_events();
 
     var list = document.getElementById("mainlist");
@@ -203,7 +204,6 @@ function list_startup() {
     list.parentNode.insertBefore(input, list.nextSibling);
     list.parentNode.insertBefore(input2, input.nextSibling);
     disable_commit_button();
-    append_debug_area();
     debug("lift-off");
 }
 
