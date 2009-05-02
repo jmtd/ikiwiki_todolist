@@ -71,12 +71,13 @@ function newitem(text) {
 }
 
 function edit_item_text(item) {
-    var text = prompt("item text", item.firstChild.nodeValue);
-    if(text) {
-        var ni = newitem(text);
-        item.parentNode.replaceChild(ni, item);
-        enable_commit_button();
-    }
+    // XXX: firstChild might not be all the text
+    var text = item.firstChild.nodeValue;
+    var input = document.createElement("input");
+    input.setAttribute("type", "text");
+    input.setAttribute("value", text);
+    item.replaceChild(input, item.firstChild);
+    // TODO: add an event for submission
 }
 
 function additem(text) {
