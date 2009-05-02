@@ -72,10 +72,18 @@ function edit_item_text(item) {
     // XXX: might end up with superfluous <div>s in the item text
     var text = item.firstChild.innerHTML;
     var input = document.createElement("input");
+    var form = document.createElement("form");
     input.setAttribute("type", "text");
     input.setAttribute("value", text);
-    item.replaceChild(input, item.firstChild);
+    form.appendChild(input);
+    form.setAttribute("action", "");
     // TODO: add an event for submission
+    form.addEventListener("submit", function(e) {
+        alert(form.innerHTML);
+        alert(text);
+        alert(item.innerHTML);
+    }, false);
+    item.replaceChild(form, item.firstChild);
 }
 
 function additem(text) {
