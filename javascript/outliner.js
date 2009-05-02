@@ -75,7 +75,7 @@ function edit_item_text(item) {
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("value", text);
-    input.setAttribute("size", text.length + 4);
+    input.setAttribute("size", text.length + 3);
     item.replaceChild(input, item.firstChild);
     input.addEventListener("keypress", function(e) {
         if(13 == e.keyCode) { // return
@@ -151,15 +151,16 @@ function add_removebutton_to_item(item) {
     var a = document.createElement("a");
     var span = document.createElement("span");
     a.href = '#';
-    a.appendChild(document.createTextNode("x"));
+    a.appendChild(document.createTextNode("remove"));
     a.addEventListener("click", function (e) {
         toggle_strike_item(item);
 	e.stopPropagation();
 	e.preventDefault();
     }, false);
     span.setAttribute("class", "remove");
-    span.appendChild(document.createTextNode(" "));
+    span.appendChild(document.createTextNode(" ("));
     span.appendChild(a);
+    span.appendChild(document.createTextNode(")"));
     item.appendChild(span);
     debug("added removebutton");
 }
