@@ -75,6 +75,13 @@ function edit_item_text(item) {
     input.setAttribute("type", "text");
     input.setAttribute("value", text);
     item.replaceChild(input, item.firstChild);
+    input.addEventListener("keypress", function(e) {
+        if(13 == e.keyCode) { // return
+            alert("we should do something here");
+            alert(input.getAttribute("value"));
+            alert(item.innerHTML);
+        }
+    }, false);
     // TODO: add an event for submission
 }
 
