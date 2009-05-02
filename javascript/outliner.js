@@ -165,10 +165,10 @@ function list_startup_existing_item_events() {
     var mainlist = document.getElementById("mainlist");
     for(var i = 0; i < mainlist.childNodes.length; ++i) {
         var li = mainlist.childNodes[i];
-        add_removebutton_to_item(li);
         li.addEventListener("click", function() {
             item_click_event(li);
         }, false);
+        add_removebutton_to_item(li);
         debug("added click event to " + li.innerHTML);
     }
 }
