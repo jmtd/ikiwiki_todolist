@@ -75,13 +75,11 @@ function edit_item_text(item) {
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("value", text);
-    input.setAttribute("id", "zomglol");
     item.replaceChild(input, item.firstChild);
     input.addEventListener("keypress", function(e) {
         if(13 == e.keyCode) { // return
-            var div = document.createElement("div");
-            div.appendChild(document.createTextNode(input.value));
-            item.replaceChild(div, input);
+            var i = newitem(input.value);
+            item.parentNode.replaceChild(i, item);
             enable_commit_button();
         }
     }, false);
@@ -101,8 +99,14 @@ function deselect_all_items() {
     for(var child = list.firstChild; null != child; child = child.nextSibling) {
         if(("LI" == child.nodeName || "li" == child.nodeName) &&
            child.childNodes.length > 0) {
-            var div = child.firstChild;
-            div.setAttribute("class", "item");
+            var fc = child.firstChild;
+            if("INPUT" == fc.nodeName || "input" == fc.nodeName) {
+                var i = newitem(fc.value);
+                list.replaceChild(i, child);
+                enable_commit_button();
+            } else {
+                fc.setAttribute("class", "item");
+            }
         }
     }
 }
