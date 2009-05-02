@@ -52,13 +52,11 @@ function remove_item(item) {
 }
 
 function item_click_event(item) {
-    debug("got a click event for " +item.innerHTML);
+    debug("item_click_event");
     if(item.parentNode) {
         if(item_is_selected(item)) {
-            debug("item is already selected");
             edit_item_text(item);
         } else {
-            debug("item is not already selected");
             select_item(item);
         }
     }
@@ -160,7 +158,7 @@ function add_click_event(item) {
     item.addEventListener("click", function() {
         item_click_event(item);
     }, false);
-    debug("added click event to " + item.innerHTML);
+    debug("add_click_event");
 }
 
 // find existing items and attach events
