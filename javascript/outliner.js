@@ -60,15 +60,17 @@ function item_click_event(item) {
 
 function newitem(text) {
     var li = document.createElement("li");
-    li.appendChild(document.createTextNode(text));
+    var div = document.createElement("div");
+    div.appendChild(document.createTextNode(text));
+    li.appendChild(div);
     add_removebutton_to_item(li);
     add_click_event(li);
     return li;
 }
 
 function edit_item_text(item) {
-    // XXX: firstChild might not be all the text
-    var text = item.firstChild.nodeValue;
+    // XXX: might end up with superfluous <div>s in the item text
+    var text = item.firstChild.innerHTML;
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("value", text);
@@ -152,8 +154,9 @@ function remove_removebutton_from_item(item) {
 }
 
 function add_click_event(item) {
-    item.addEventListener("click", function() {
-        item_click_event(item);
+    div = item.firstChild;
+    div.addEventListener("click", function() {
+        item_click_event(div);
     }, false);
     debug("add_click_event");
 }
@@ -221,8 +224,11 @@ function commit_changes() {
     encoded += "&page=" + escape(page);
     encoded += "&editcontent=";
     for(i = 0; i < mainlist.childNodes.length; ++i) {
-        var txt = mainlist.childNodes[i].firstChild.nodeValue;
-        encoded += escape(txt + "\n");
+        var div = mainlist.childNodes[i].firstChild;
+        for(j = 0; j < div.childNodes.length; ++j) {
+            encoded += escape(div.childNodes[j].nodeValue);
+        }
+        encoded += escape("\n");
     }
     var xhr = XMLHttpRequest();
     xhr.open("POST", cgiurl, true);
