@@ -10,7 +10,6 @@ sub import {
     add_underlay("javascript");
     hook(type => "htmlize", id => "jonlist", call => \&htmlize);
     hook(type => "pagetemplate", id => "jonlist", call => \&pagetemplate);
-    hook(type => "format", id => "jonlist", call => \&format);
 
 
 }
@@ -23,7 +22,8 @@ sub htmlize () {
     foreach my $line (split("\n", $content)) {
         $retstr .= "<li>$line</li>";
     }
-    return "<ul id=\"mainlist\">$retstr</ul>";
+    return include_javascript($params{page}, 1).
+           "\n<ul id=\"mainlist\">$retstr</ul>";
 }
 
 # add a template for our javascript whatsit
@@ -42,19 +42,6 @@ sub pagetemplate () {
         $template->param(have_actions => 1);
         $template->param(jonvar => $doohicky);
     }
-}
-
-# thanks to relativedate
-sub format (@) {
-        my %params=@_;
-
-        if (! ($params{content}=~s!^(<body>)!$1.include_javascript($params{page}
-)!em)) {
-                # no </body> tag, probably in preview mode
-                $params{content}=include_javascript($params{page}, 1).$params{co
-ntent};
-        }
-        return $params{content};
 }
 
 # thanks to relativedate
